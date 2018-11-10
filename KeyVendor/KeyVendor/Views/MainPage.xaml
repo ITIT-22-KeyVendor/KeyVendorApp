@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:KeyVendor.Views"
+             x:Class="KeyVendor.Views.MainPage"
+             BackgroundColor="White">
+
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness"
+                    iOS="0,20,0,0"
+                    Android="0"
+                    WinPhone="0"/>
+    </ContentPage.Padding>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="З'єднання"
+                     Order="Primary"
+                     Command="{Binding OpenConnectionPageCommand}">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource"
+                            iOS="connection.png"
+                            Android="connection.png"
+                            WinPhone="Images/connection.png"/>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
+        <ToolbarItem Text="Профіль"
+                     Order="Primary"
+                     Command="{Binding OpenProfilePageCommand}">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource"
+                            iOS="profile.png"
+                            Android="profile.png"
+                            WinPhone="Images/profile.png"/>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
+        <ToolbarItem Text="Довідка"
+                     Order="Primary"
+                     Command="{Binding OpenHelpPageCommand}">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource"
+                            iOS="help.png"
+                            Android="help.png"
+                            WinPhone="Images/help.png"/>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="View">
+                <Setter Property="HorizontalOptions" Value="Center"/>
+            </Style>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="Gray"/>
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="HeightRequest" Value="50"/>
+                <Setter Property="BackgroundColor" Value="DimGray"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <AbsoluteLayout>
+        <Image AbsoluteLayout.LayoutBounds="0,0,1,1"
+               AbsoluteLayout.LayoutFlags="All"
+               Source="{local:ImageResourceExtension KeyVendor.Views.Images.background_gray.png}"
+               Aspect="AspectFill"/>
+        
+        <Grid AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+              AbsoluteLayout.LayoutFlags="All">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            <Label
+                Grid.Row="0"
+                Text="Список усіх наявних ключів буде доступний для Вас після підключення до системи"
+                VerticalOptions="Center"
+                Opacity="0.8"/>
+            <Button
+                Grid.Row="1"
+                Text="Підключитися"
+                VerticalOptions="Center"
+                Command="{Binding ConnectCommand}"/>
+        </Grid>
+
+        <AbsoluteLayout
+            x:Name="newUserOverlay"
+            AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="White"
+            IsVisible="{Binding IsNewUser}">
+            <Grid 
+                AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+                AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label 
+                    Grid.Row="0"
+                    VerticalOptions="Start"
+                    FontAttributes="Bold"
+                    Text="Вітаємо у системі автоматизованої видачі ключів!"/>
+                <Label 
+                    Grid.Row="1"
+                    Margin="30"
+                    VerticalOptions="Start"
+                    VerticalTextAlignment="Start"
+                    Text="Для полегшення Вашого підтвердження адміністратором та ведення обліку у системі радимо
+Вам вказати своє ім'я та додати кілька слів про себе у Вашому профілі."/>
+                <Button
+                    Grid.Row="2"
+                    Text="Перейти у профіль"
+                    VerticalOptions="End"
+                    FontSize="Small"
+                    Command="{Binding OpenProfilePageCommand}"/>
+                <Button
+                    Grid.Row="3"
+                    Text="Продовжити"
+                    VerticalOptions="End"
+                    FontSize="Small"
+                    Command="{Binding CloseNewUserOverlayCommand}"/>
+            </Grid>
+        </AbsoluteLayout>
+
+        <AbsoluteLayout
+            x:Name="activityIndicationOverlay"
+            AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="White"
+            Opacity="0.85"
+            IsVisible="{Binding IsActivityIndicationVisible}">
+            <Grid
+                AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+                AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Label
+                    Grid.Row="0"
+                    VerticalOptions="Center"
+                    FontSize="Large"
+                    Text="{Binding ActivityIndicationText}"/>
+                <ActivityIndicator
+                    Grid.Row="1"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Fill"
+                    IsRunning="{Binding IsActivityIndicationVisible}"/>
+            </Grid>
+        </AbsoluteLayout>
+
+        <AbsoluteLayout
+            x:Name="messageOverlay"
+            AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="White"
+            IsVisible="{Binding IsMessageVisible}">
+            <Grid
+                AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+                AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Label
+                    Grid.Row="0"
+                    VerticalOptions="Center"
+                    Text="{Binding MessageText}"/>
+                <Button
+                    Grid.Row="1"
+                    VerticalOptions="Center"
+                    Text="{Binding MessageButtonText}"
+                    Command="{Binding MessageButtonCommand}"/>
+            </Grid>
+        </AbsoluteLayout>
+
+        <AbsoluteLayout
+            x:Name="registrationOverlay"
+            AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="White"
+            IsVisible="{Binding IsRegistrationOverlayVisible}">
+            <Grid 
+                AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+                AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <Label 
+                    Grid.Row="0"
+                    Margin="30"
+                    VerticalOptions="Start"
+                    VerticalTextAlignment="Start"
+                    Text="Ви не можете підключитись до цієї системи автоматизованого обліку ключів, так як Ви не є зареєстрованим користувачем. Бажаєте залишити заявку на реєстрацію?"/>
+                <Button
+                    Grid.Row="1"
+                    Text="Залишити заявку"
+                    VerticalOptions="End"
+                    FontSize="Small"
+                    Command="{Binding RegisterCommand}"/>
+                <Button
+                    Grid.Row="2"
+                    Text="Закрити"
+                    VerticalOptions="End"
+                    FontSize="Small"
+                    Command="{Binding CloseRegistrationOverlayCommand}"/>
+            </Grid>
+        </AbsoluteLayout>
+    </AbsoluteLayout>
+</ContentPage>

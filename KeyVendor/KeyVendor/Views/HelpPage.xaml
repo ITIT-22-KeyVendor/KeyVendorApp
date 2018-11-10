@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:KeyVendor.Views"
+             x:Class="KeyVendor.Views.HelpPage"
+             Title="Про програму">
+    
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness"
+                    iOS="0,20,0,0"
+                    Android="0"
+                    WinPhone="0"/>
+    </ContentPage.Padding>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="View">
+                <Setter Property="HorizontalOptions" Value="Center"/>
+            </Style>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="DimGray"/>
+                <Setter Property="FontSize" Value="Small"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <AbsoluteLayout>
+        <Image AbsoluteLayout.LayoutBounds="0,0,1,1"
+               AbsoluteLayout.LayoutFlags="All"
+               Source="{local:ImageResourceExtension KeyVendor.Views.Images.background_gray.png}"
+               Aspect="AspectFill"/>
+
+        <Grid AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+              AbsoluteLayout.LayoutFlags="All">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ScrollView 
+                Grid.Row="0">
+                <Label 
+                    Text="Програма призначена для комунікації з пристроєм обліку ключів за допомогою Bluetooth. Для того, щоб уникнути несанкціонованого доступу, при першому з'єднанні з системою необхідно залишити заявку, яку має підтвердити адміністратор системи. Для Вашого простішого розпізнавання адміністратором та ведення обліку в системі можна додати своє ім'я та опис у секції «Профіль».
+Секція «Вибір з'єднання», дає змогу вибрати Bluetooth-підключення, у випадку якщо треба підключитись до іншої системи чи щось змінилось у старій. 
+На стартовому екрані є можливість підключення до системи. Якщо користувач вже підтверджений адміністратором, то з'являється вікно з усіма наявними ключами. Після вибору ключа, надсилається запит, і система видасть Вам відповідний ключ."
+                    HorizontalTextAlignment="Start"
+                    VerticalTextAlignment="Start"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Start"/>
+            </ScrollView>
+            <StackLayout
+                Grid.Row="1"
+                Margin="0,5,0,0"
+                Orientation="Horizontal">
+                <Label 
+                    Text="©"
+                    HorizontalTextAlignment="Start"
+                    VerticalTextAlignment="Start"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start"/>
+                <Label
+                    Text="Степанов М.В., Стельмах А.В., Зарічинський Б.О."
+                    FontAttributes="Italic"
+                    HorizontalTextAlignment="Start"
+                    VerticalTextAlignment="Start"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start"/>
+            </StackLayout>
+        </Grid>
+    </AbsoluteLayout>
+</ContentPage>

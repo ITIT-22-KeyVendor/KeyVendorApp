@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="KeyVendor.Views.KeyManagementPage"
+             xmlns:local="clr-namespace:KeyVendor.Views"
+             Title="Керування ключами">
+
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness"
+                    iOS="0,20,0,0"
+                    Android="0"
+                    WinPhone="0"/>
+    </ContentPage.Padding>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="View">
+                <Setter Property="HorizontalOptions" Value="Center"/>
+            </Style>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="Gray"/>
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="HeightRequest" Value="50"/>
+                <Setter Property="BackgroundColor" Value="DimGray"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <AbsoluteLayout>
+        <Image AbsoluteLayout.LayoutBounds="0,0,1,1"
+               AbsoluteLayout.LayoutFlags="All"
+               Source="{local:ImageResourceExtension KeyVendor.Views.Images.background_gray.png}"
+               Aspect="AspectFill"/>
+
+        <Grid 
+            AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+            AbsoluteLayout.LayoutFlags="All">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label
+                Text="Задайте новий список ключів. Кожен ключ - з нового рядка"
+                Margin="0,5,0,0"
+                Grid.Row="0"/>
+            <Editor
+                Grid.Row="1"
+                />
+            <ActivityIndicator
+                    Grid.Row="1"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Fill"
+                    IsRunning="{Binding IsActivityIndicationVisible}"
+                    IsVisible="{Binding IsActivityIndicationVisible}"/>
+            <Button
+                Text="Задати новий список"
+                Command="{Binding SetKeyListCommand}"
+                Grid.Row="2"/>
+        </Grid>
+
+        <AbsoluteLayout
+            x:Name="messageOverlay"
+            AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="White"
+            IsVisible="{Binding IsMessageVisible}">
+            <Grid
+                AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+                AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Label
+                    Grid.Row="0"
+                    VerticalOptions="Center"
+                    Text="{Binding MessageText}"/>
+                <Button
+                    Grid.Row="1"
+                    VerticalOptions="Center"
+                    Text="{Binding MessageButtonText}"
+                    Command="{Binding MessageButtonCommand}"/>
+            </Grid>
+        </AbsoluteLayout>
+    </AbsoluteLayout>
+</ContentPage>
