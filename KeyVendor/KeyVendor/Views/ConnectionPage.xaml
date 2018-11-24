@@ -92,12 +92,30 @@
                 Grid.Row="3"/>
         </Grid>
 
-        <Label 
-            AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+        <AbsoluteLayout
+            x:Name="messageOverlay"
+            AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"
             AbsoluteLayout.LayoutFlags="All"
-            IsVisible="{Binding IsMessageVisible}"
-            Text="{Binding MessageText}"
-            FontSize="Medium"
-            VerticalOptions="Center"/>
+            BackgroundColor="White"
+            IsVisible="{Binding IsMessageVisible}">
+            <Grid
+                AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+                AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Label
+                    Grid.Row="0"
+                    VerticalOptions="Center"
+                    Text="{Binding MessageText}"/>
+                <Button
+                    Grid.Row="1"
+                    VerticalOptions="Center"
+                    Text="{Binding MessageButtonText}"
+                    Command="{Binding MessageButtonCommand}"/>
+            </Grid>
+        </AbsoluteLayout>
     </AbsoluteLayout>
 </ContentPage>

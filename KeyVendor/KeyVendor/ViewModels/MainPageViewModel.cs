@@ -215,7 +215,6 @@ namespace KeyVendor.ViewModels
         public ICommand OpenHelpPageCommand { get; protected set; }
         public ICommand ConnectCommand { get; protected set; }
         public ICommand CloseNewUserOverlayCommand { get; protected set; }
-        public ICommand MessageButtonCommand { get; protected set; }
         public ICommand RegisterCommand { get; protected set; }
         public ICommand CloseRegistrationOverlayCommand { get; protected set; }
 
@@ -270,8 +269,6 @@ namespace KeyVendor.ViewModels
                 () => { return !IsNewUser && !IsActivityIndicationVisible; });
             CloseNewUserOverlayCommand = new Command(
                 () => { IsNewUser = false; });
-            MessageButtonCommand = new Command(
-                () => { IsMessageVisible = false; });
             RegisterCommand = new Command(
                 () => { RegisterAsync();
                         IsRegistrationOverlayVisible = false; });

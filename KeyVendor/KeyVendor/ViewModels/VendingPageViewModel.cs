@@ -78,8 +78,7 @@ namespace KeyVendor.ViewModels
         public ICommand OpenLogPageCommand { get; protected set; }
         public ICommand RefreshCommand { get; protected set; }
         public ICommand GetKeyCommand { get; protected set; }
-        public ICommand MessageButtonCommand { get; protected set; }
-
+        
         private async void GetKeyListAsync()
         {
             await Task.Run(async () =>
@@ -153,8 +152,6 @@ namespace KeyVendor.ViewModels
             GetKeyCommand = new Command(
                 () => { if (SelectedKey != null) GetKeyAsync(); },
                 () => { return SelectedKey != null && !GettingKey; });
-            MessageButtonCommand = new Command(
-                () => { IsMessageVisible = false; });
         }
         public override void UpdateCommands()
         {

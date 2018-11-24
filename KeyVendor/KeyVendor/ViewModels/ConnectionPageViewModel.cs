@@ -16,21 +16,19 @@ namespace KeyVendor.ViewModels
             ButtonText = TextConstants.ButtonStartRefreshing;
             DeviceList = _bluetooth.DeviceList;
 
-            if (!_bluetooth.IsBluetoothAvailable)
-            {
-                MessageText = TextConstants.BluetoothUnavailable;
-                IsMessageVisible = true;
-            }
-            else
-            {
-                StartRefreshingAsync();
-            }
+            StartRefreshingAsync();
             
             InitializeCommands();
         }
 
         public async void StartRefreshingAsync()
         {
+            if (!_bluetooth.IsBluetoothAvailable)
+            {
+                ShowMessage(TextConstants.BluetoothUnavailable, TextConstants.ButtonClose);
+                return;
+            }
+
             if (_bluetooth.IsDiscovering)
                 return;
 
