@@ -5,5 +5,5 @@
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
-	<application android:label="KeyVendor"></application>
+	<application android:label="KeyVendor" android:icon="@drawable/profile"></application>
 </manifest>

@@ -13,12 +13,12 @@ namespace KeyVendor.ViewModels
         public MainPageViewModel()
         {
             InitializeCommands();
-            _bluetoothManager = DependencyService.Get<IBluetoothManager>();
+            _bluetooth = DependencyService.Get<IBluetoothManager>();
         }
 
         public void OpenConnectionPage()
         {
-            OnOpenConnectionPage(this, new ConnectionPageViewModel(_user, _bluetoothManager));
+            OnOpenConnectionPage(this, new ConnectionPageViewModel(_user, _bluetooth));
         }
         public void OpenProfilePage()
         {
@@ -37,7 +37,7 @@ namespace KeyVendor.ViewModels
             OnOpenVendingPage(this, new VendingPageViewModel(_user, _bluetoothManager));
             return;
             */
-            if (!_bluetoothManager.IsBluetoothAvailable)
+            if (!_bluetooth.IsBluetoothAvailable)
             {
                 ShowMessage("Bluetooth на вашому пристрої не доступний!", "Закрити");
                 return;
@@ -45,26 +45,48 @@ namespace KeyVendor.ViewModels
 
             StartActivityIndication("Іде підключення. Будь ласка зачекайте...");
             await Task.Delay(50);
-                        
-            if (!await TurnOnBluetoothAsync(2000, 50))
+
+            if (!await _bluetooth.TurnOnBluetoothAsync(2000, 25))
             {
                 StopActivityIndication();
                 ShowMessage("Не вдалось увімкнути Bluetooth", "Закрити");
                 return;
             }
-            if (!await FindBluetoothDeviceAsync(50))
+
+            if (_user.SavedAddress == "")
             {
-                StopActivityIndication();
-                ShowMessage("Не вдалось знайти пристрій обліку ключів. Переконайтесь що Ви знаходитесь достатньо близько до нього. Також Ви можете перейти на сторінку вибору з'єднання та вибрати Bluetooth-пристрій, який відповідатиме системі видачі ключів", "Закрити");
-                return;
+                var device = await _bluetooth.FindBluetoothDeviceByNameAsync(_defaultDeviceName, 25);
+
+                if (device == null)
+                {
+                    StopActivityIndication();
+                    ShowMessage("Не вдалось знайти пристрій обліку ключів. Переконайтесь що Ви знаходитесь достатньо близько до нього. Також Ви можете перейти на сторінку вибору з'єднання та вибрати Bluetooth-пристрій, який відповідатиме системі видачі ключів", "Закрити");
+                    return;
+                }
+                else
+                {
+                    _user.SavedAddress = device.Address;
+                }
             }
-            if (!await PairWithBluetoothDeviceAsync(25000, 50))
+            else
+            {
+                var device = await _bluetooth.FindBluetoothDeviceByAddressAsync(_user.SavedAddress, 25);
+
+                if (device == null)
+                {
+                    StopActivityIndication();
+                    ShowMessage("Не вдалось знайти пристрій обліку ключів. Переконайтесь що Ви знаходитесь достатньо близько до нього. Також Ви можете перейти на сторінку вибору з'єднання та вибрати Bluetooth-пристрій, який відповідатиме системі видачі ключів", "Закрити");
+                    return;
+                }
+            }
+
+            if (!await _bluetooth.BondWithBluetoothDeviceAsync(_user.SavedAddress, 25000, 50))
             {
                 StopActivityIndication();
                 ShowMessage("Не вдалось утворити пару з системою видачі ключів або вийшов час на її утворення", "Закрити");
                 return;
             }
-            if (!await CreateConnectionAsync(5000, 50))
+            if (!await _bluetooth.CreateConnectionAsync(5000, 50))
             {
                 StopActivityIndication();
                 ShowMessage("Не вдалось підключитися", "Закрити");
@@ -96,12 +118,19 @@ namespace KeyVendor.ViewModels
             _user.HasAdminRights = checkForAdminRightsAnswer.AnswerType == KeyVendorAnswerType.Success;
             
             StopActivityIndication();
-            OnOpenVendingPage(this, new VendingPageViewModel(_user, _bluetoothManager));
+            OnOpenVendingPage(this, new VendingPageViewModel(_user, _bluetooth));
         }
         public async void RegisterAsync()
         {
             StartActivityIndication("Надсилається заявка на реєстрацію");
 
+            if (!await _bluetooth.TurnOnBluetoothAsync(1000, 25))
+            {
+                StopActivityIndication();
+                ShowMessage("Не вдалось увімкнути Bluetooth", "Закрити");
+                return;
+            }
+            
             KeyVendorAnswer answer = await SendApplication(3000, 100);
 
             if (!answer.IsCorrect || answer.AnswerType != KeyVendorAnswerType.Success)
@@ -133,20 +162,20 @@ namespace KeyVendor.ViewModels
         }
         public void OnSleep()
         {
-            if (_bluetoothManager != null)
+            if (_bluetooth != null)
             {
-                if (_bluetoothManager.IsRefreshing)
-                    _bluetoothManager.StopRefreshing();
-                if (_bluetoothManager.IsConnected)
-                    _bluetoothManager.CloseConnection();
-                _bluetoothManager.IsBluetoothOn = false;
+                if (_bluetooth.IsDiscovering)
+                    _bluetooth.StopDiscovering();
+                if (_bluetooth.IsConnected)
+                    _bluetooth.CloseConnection();
+                _bluetooth.IsBluetoothOn = false;
             }
         }
         public void OnResume()
         {
-            if (_bluetoothManager != null)
+            if (_bluetooth != null)
             {
-                _bluetoothManager.IsBluetoothOn = true;
+                _bluetooth.IsBluetoothOn = true;
             }
         }
 
@@ -193,83 +222,6 @@ namespace KeyVendor.ViewModels
         public ICommand RegisterCommand { get; protected set; }
         public ICommand CloseRegistrationOverlayCommand { get; protected set; }
 
-        private async Task<bool> TurnOnBluetoothAsync(uint timeout, uint delay)
-        {
-            return await Task.Run(async () =>
-            {
-                if (!_bluetoothManager.IsBluetoothOn)
-                {
-                    _bluetoothManager.IsBluetoothOn = true;
-
-                    for (int i = 0; i * delay < timeout; i++)
-                        if (!_bluetoothManager.IsBluetoothOn)
-                            await Task.Delay((int)delay);
-                        else break;
-                }
-
-                return _bluetoothManager.IsBluetoothOn;
-            });
-        }
-        private async Task<bool> FindBluetoothDeviceAsync(uint delay)
-        {
-            return await Task.Run(async () =>
-            {
-                if (_user.SavedAddress == "")
-                {
-                    _bluetoothManager.StartRefreshing();
-
-                    while (_bluetoothManager.IsRefreshing)
-                    {
-                        foreach (var item in _bluetoothManager.DeviceList)
-                            if ((_user.SavedAddress == "" && item.Name == _defaultDeviceName) ||
-                                 item.Address == _user.SavedAddress)
-                            {
-                                _user.SavedAddress = item.Address;
-                                break;
-                            }
-
-                        if (_user.SavedAddress == "")
-                            await Task.Delay((int)delay);
-                    }
-                }
-
-                return _user.SavedAddress != "";
-            });
-        }
-        private async Task<bool> PairWithBluetoothDeviceAsync(uint timeout, uint delay)
-        {
-            return await Task.Run(async () =>
-            {
-                if (!_bluetoothManager.IsBonded)
-                {
-                    _bluetoothManager.CreateBond(_user.SavedAddress);
-
-                    for (int i = 0; i * delay < timeout; i++)
-                        if (!_bluetoothManager.IsBonded)
-                            await Task.Delay((int)delay);
-                        else break;
-                }
-
-                return _bluetoothManager.IsBonded;
-            });
-        }
-        private async Task<bool> CreateConnectionAsync(uint timeout, uint delay)
-        {
-            return await Task.Run(async () => 
-            {
-                if (!_bluetoothManager.IsConnected)
-                {
-                    _bluetoothManager.OpenConnection();
-
-                    for (int i = 0; i * delay < timeout; i++)
-                        if (!_bluetoothManager.IsConnected)
-                            await Task.Delay((int)delay);
-                        else break;
-                }
-
-                return _bluetoothManager.IsConnected;
-            });
-        }
         private async Task<KeyVendorAnswer> LogIn(uint timeout, uint delay)
         {
             KeyVendorCommand loginCommand = new KeyVendorCommand
@@ -278,7 +230,7 @@ namespace KeyVendor.ViewModels
                 Time = DateTime.Now,
                 CommandType = KeyVendorCommandType.UserLogin
             };
-            KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetoothManager);
+            KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetooth);
             return await terminal.ExecuteCommandAsync(loginCommand, timeout, delay);
         }
         private async Task<KeyVendorAnswer> SendApplication(uint timeout, uint delay)
@@ -290,7 +242,7 @@ namespace KeyVendor.ViewModels
                 CommandType = KeyVendorCommandType.UserRegister,
                 Data = _user.Name + "@" + _user.Description
             };
-            KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetoothManager);
+            KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetooth);
             return await terminal.ExecuteCommandAsync(registerCommand, timeout, delay);
         }
         private async Task<KeyVendorAnswer> CheckForAdminRights(uint timeout, uint delay)
@@ -301,7 +253,7 @@ namespace KeyVendor.ViewModels
                 Time = DateTime.Now,
                 CommandType = KeyVendorCommandType.AdminCheck
             };
-            KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetoothManager);
+            KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetooth);
             return await terminal.ExecuteCommandAsync(adminCheckCommand, timeout, delay);
         }
 
@@ -361,7 +313,7 @@ namespace KeyVendor.ViewModels
         private bool _isRegistrationOverlayVisible;
 
         private KeyVendorUser _user = new KeyVendorUser();
-        private IBluetoothManager _bluetoothManager;
+        private IBluetoothManager _bluetooth;
 
         private const string _defaultDeviceName = "KeyVendor";
     }

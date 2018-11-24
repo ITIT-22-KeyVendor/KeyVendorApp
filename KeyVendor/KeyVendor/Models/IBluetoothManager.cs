@@ -1,12 +1,11 @@
 ﻿using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
 namespace KeyVendor.Models
 {
     public interface IBluetoothManager
     {
-        void StartRefreshing();
-        void StopRefreshing();
+        void StartDiscovering();
+        void StopDiscovering();
         void CreateBond(string address);
         void RemoveBond();
         void OpenConnection();
@@ -16,7 +15,7 @@ namespace KeyVendor.Models
 
         bool IsBluetoothOn { get; set; }
         bool IsBluetoothAvailable { get; }
-        bool IsRefreshing { get; }
+        bool IsDiscovering { get; }
         bool IsBonded { get; }
         bool IsConnected { get; }
 
