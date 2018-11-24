@@ -78,8 +78,7 @@ namespace KeyVendor.ViewModels
         public ICommand OpenLogPageCommand { get; protected set; }
         public ICommand RefreshCommand { get; protected set; }
         public ICommand GetKeyCommand { get; protected set; }
-        public ICommand MessageButtonCommand { get; protected set; }
-
+        
         private async void GetKeyListAsync()
         {
             await Task.Run(async () =>
@@ -100,7 +99,7 @@ namespace KeyVendor.ViewModels
                 if (!answer.IsCorrect || answer.AnswerType != KeyVendorAnswerType.Success)
                 {
                     IsActivityIndicationVisible = false;
-                    ShowMessage("Не вдалось отримати список ключів", "Закрити");
+                    ShowMessage(TextConstants.ErrorGetKeyListFail, TextConstants.ButtonClose);
                     return;
                 }
 
@@ -130,7 +129,7 @@ namespace KeyVendor.ViewModels
                 KeyVendorAnswer answer = await terminal.ExecuteCommandAsync(getKeyCommand, 3000, 100);
 
                 if (!answer.IsCorrect || answer.AnswerType != KeyVendorAnswerType.Success)
-                    ShowMessage("Сталась помилка. Спробуйте перепідключитися та повторити операцію", "Закрити");
+                    ShowMessage(TextConstants.ErrorGetKeyFail, TextConstants.ButtonClose);
             });
 
             GettingKey = false;
@@ -153,8 +152,6 @@ namespace KeyVendor.ViewModels
             GetKeyCommand = new Command(
                 () => { if (SelectedKey != null) GetKeyAsync(); },
                 () => { return SelectedKey != null && !GettingKey; });
-            MessageButtonCommand = new Command(
-                () => { IsMessageVisible = false; });
         }
         public override void UpdateCommands()
         {

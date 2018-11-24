@@ -1,7 +1,6 @@
 ﻿using KeyVendor.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -39,28 +38,28 @@ namespace KeyVendor.ViewModels
             */
             if (!_bluetooth.IsBluetoothAvailable)
             {
-                ShowMessage("Bluetooth на вашому пристрої не доступний!", "Закрити");
+                ShowMessage(TextConstants.BluetoothUnavailable, TextConstants.ButtonClose);
                 return;
             }
 
-            StartActivityIndication("Іде підключення. Будь ласка зачекайте...");
+            StartActivityIndication(TextConstants.ActivityConnection);
             await Task.Delay(50);
 
             if (!await _bluetooth.TurnOnBluetoothAsync(2000, 25))
             {
                 StopActivityIndication();
-                ShowMessage("Не вдалось увімкнути Bluetooth", "Закрити");
+                ShowMessage(TextConstants.BluetoothTurnOnFail, TextConstants.ButtonClose);
                 return;
             }
 
             if (_user.SavedAddress == "")
             {
-                var device = await _bluetooth.FindBluetoothDeviceByNameAsync(_defaultDeviceName, 25);
+                var device = await _bluetooth.FindBluetoothDeviceByNameAsync(TextConstants.DefaultDeviceName, 25);
 
                 if (device == null)
                 {
                     StopActivityIndication();
-                    ShowMessage("Не вдалось знайти пристрій обліку ключів. Переконайтесь що Ви знаходитесь достатньо близько до нього. Також Ви можете перейти на сторінку вибору з'єднання та вибрати Bluetooth-пристрій, який відповідатиме системі видачі ключів", "Закрити");
+                    ShowMessage(TextConstants.BluetoothDeviceSearchFail, TextConstants.ButtonClose);
                     return;
                 }
                 else
@@ -75,7 +74,7 @@ namespace KeyVendor.ViewModels
                 if (device == null)
                 {
                     StopActivityIndication();
-                    ShowMessage("Не вдалось знайти пристрій обліку ключів. Переконайтесь що Ви знаходитесь достатньо близько до нього. Також Ви можете перейти на сторінку вибору з'єднання та вибрати Bluetooth-пристрій, який відповідатиме системі видачі ключів", "Закрити");
+                    ShowMessage(TextConstants.BluetoothDeviceSearchFail, TextConstants.ButtonClose);
                     return;
                 }
             }
@@ -83,13 +82,13 @@ namespace KeyVendor.ViewModels
             if (!await _bluetooth.BondWithBluetoothDeviceAsync(_user.SavedAddress, 25000, 50))
             {
                 StopActivityIndication();
-                ShowMessage("Не вдалось утворити пару з системою видачі ключів або вийшов час на її утворення", "Закрити");
+                ShowMessage(TextConstants.BluetoothBondFail, TextConstants.ButtonClose);
                 return;
             }
             if (!await _bluetooth.CreateConnectionAsync(5000, 50))
             {
                 StopActivityIndication();
-                ShowMessage("Не вдалось підключитися", "Закрити");
+                ShowMessage(TextConstants.BluetoothConnectionFail, TextConstants.ButtonClose);
                 return;
             }
             
@@ -98,13 +97,13 @@ namespace KeyVendor.ViewModels
             if (!loginAnswer.IsCorrect || loginAnswer.AnswerType == KeyVendorAnswerType.InvalidCommand)
             {
                 StopActivityIndication();
-                ShowMessage("Сталась помилка, спробуйте ще раз", "Закрити");
+                ShowMessage(TextConstants.ErrorTryAgain, TextConstants.ButtonClose);
                 return;
             }
             else if (loginAnswer.AnswerType == KeyVendorAnswerType.AccessDenied)
             {
                 StopActivityIndication();
-                ShowMessage("Вас було заблоковано адміністратором. Тепер Ви не зможете підключатись до цієї системи", "Закрити");
+                ShowMessage(TextConstants.ErrorUserBlocked, TextConstants.ButtonClose);
                 return;
             }
             else if (loginAnswer.AnswerType == KeyVendorAnswerType.Failure)
@@ -122,12 +121,12 @@ namespace KeyVendor.ViewModels
         }
         public async void RegisterAsync()
         {
-            StartActivityIndication("Надсилається заявка на реєстрацію");
+            StartActivityIndication(TextConstants.ActivityRegistration);
 
             if (!await _bluetooth.TurnOnBluetoothAsync(1000, 25))
             {
                 StopActivityIndication();
-                ShowMessage("Не вдалось увімкнути Bluetooth", "Закрити");
+                ShowMessage(TextConstants.BluetoothTurnOnFail, TextConstants.ButtonClose);
                 return;
             }
             
@@ -136,12 +135,12 @@ namespace KeyVendor.ViewModels
             if (!answer.IsCorrect || answer.AnswerType != KeyVendorAnswerType.Success)
             {
                 StopActivityIndication();
-                ShowMessage("Не вдалось надіслати заявку на реєстрацію", "Закрити");
+                ShowMessage(TextConstants.ErrorApplicationFail, TextConstants.ButtonClose);
                 return;
             }
 
             StopActivityIndication();
-            ShowMessage("Заявку на реєстрацію надіслано. Після підтвердження адміністратором, Ви зможете увійти у цю систему", "Закрити");
+            ShowMessage(TextConstants.SuccessApplicationSent, TextConstants.ButtonClose);
         }
 
         public void SaveState(IDictionary<string, object> dictionary)
@@ -174,9 +173,7 @@ namespace KeyVendor.ViewModels
         public void OnResume()
         {
             if (_bluetooth != null)
-            {
                 _bluetooth.IsBluetoothOn = true;
-            }
         }
 
         public bool IsNewUser
@@ -218,7 +215,6 @@ namespace KeyVendor.ViewModels
         public ICommand OpenHelpPageCommand { get; protected set; }
         public ICommand ConnectCommand { get; protected set; }
         public ICommand CloseNewUserOverlayCommand { get; protected set; }
-        public ICommand MessageButtonCommand { get; protected set; }
         public ICommand RegisterCommand { get; protected set; }
         public ICommand CloseRegistrationOverlayCommand { get; protected set; }
 
@@ -273,8 +269,6 @@ namespace KeyVendor.ViewModels
                 () => { return !IsNewUser && !IsActivityIndicationVisible; });
             CloseNewUserOverlayCommand = new Command(
                 () => { IsNewUser = false; });
-            MessageButtonCommand = new Command(
-                () => { IsMessageVisible = false; });
             RegisterCommand = new Command(
                 () => { RegisterAsync();
                         IsRegistrationOverlayVisible = false; });
@@ -314,7 +308,5 @@ namespace KeyVendor.ViewModels
 
         private KeyVendorUser _user = new KeyVendorUser();
         private IBluetoothManager _bluetooth;
-
-        private const string _defaultDeviceName = "KeyVendor";
     }
 }
