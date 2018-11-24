@@ -1,5 +1,4 @@
 ﻿using KeyVendor.Models;
-using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -14,17 +13,19 @@ namespace KeyVendor.ViewModels
             _user = user;
             _bluetooth = bluetooth;
 
+            ButtonText = TextConstants.ButtonStartRefreshing;
+            DeviceList = _bluetooth.DeviceList;
+
             if (!_bluetooth.IsBluetoothAvailable)
             {
-                MessageText = "На вашому пристрої Bluetooth не доступний! На жаль, ви не зможете користуватись цим застосунком :(";
+                MessageText = TextConstants.BluetoothUnavailable;
                 IsMessageVisible = true;
             }
             else
             {
                 StartRefreshingAsync();
             }
-
-            DeviceList = _bluetooth.DeviceList;
+            
             InitializeCommands();
         }
 
@@ -33,7 +34,7 @@ namespace KeyVendor.ViewModels
             if (_bluetooth.IsDiscovering)
                 return;
 
-            ButtonText = _buttonStopRefreshingText;
+            ButtonText = TextConstants.ButtonStopRefreshing;
 
             await _bluetooth.TurnOnBluetoothAsync(1000, 25);
             await _bluetooth.StartDeviceDiscoveryAsync(1000, 25);
@@ -46,7 +47,7 @@ namespace KeyVendor.ViewModels
                     {
                         foreach (var item in DeviceList)
                         {
-                            if ((_user.SavedAddress == "" && item.Name == _defaultDeviceName) ||
+                            if ((_user.SavedAddress == "" && item.Name == TextConstants.DefaultDeviceName) ||
                                     item.Address == _user.SavedAddress)
                             {
                                 SelectedDevice = item;
@@ -59,7 +60,7 @@ namespace KeyVendor.ViewModels
                 }
             });
 
-            ButtonText = _buttonStartRefreshingText;
+            ButtonText = TextConstants.ButtonStartRefreshing;
         }
         public void StopRefreshing()
         {
@@ -105,9 +106,5 @@ namespace KeyVendor.ViewModels
         private BluetoothDevice _selectedDevice;
         private string _buttonText;
         private KeyVendorUser _user;
-
-        private const string _buttonStartRefreshingText = "Розпочати пошук";
-        private const string _buttonStopRefreshingText = "Зупинити пошук";
-        private const string _defaultDeviceName = "KeyVendor";
     }
 }

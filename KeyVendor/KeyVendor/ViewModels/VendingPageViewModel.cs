@@ -100,7 +100,7 @@ namespace KeyVendor.ViewModels
                 if (!answer.IsCorrect || answer.AnswerType != KeyVendorAnswerType.Success)
                 {
                     IsActivityIndicationVisible = false;
-                    ShowMessage("Не вдалось отримати список ключів", "Закрити");
+                    ShowMessage(TextConstants.ErrorGetKeyListFail, TextConstants.ButtonClose);
                     return;
                 }
 
@@ -130,7 +130,7 @@ namespace KeyVendor.ViewModels
                 KeyVendorAnswer answer = await terminal.ExecuteCommandAsync(getKeyCommand, 3000, 100);
 
                 if (!answer.IsCorrect || answer.AnswerType != KeyVendorAnswerType.Success)
-                    ShowMessage("Сталась помилка. Спробуйте перепідключитися та повторити операцію", "Закрити");
+                    ShowMessage(TextConstants.ErrorGetKeyFail, TextConstants.ButtonClose);
             });
 
             GettingKey = false;
