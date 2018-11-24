@@ -6,7 +6,7 @@ namespace KeyVendor.Models
     {
         public KeyVendorUser()
         {
-            UUID = Name = Description = "";
+            UUID = Name = Description = SavedAddress = "";
             HasAdminRights = false;
             IsNewUser = true;
         }

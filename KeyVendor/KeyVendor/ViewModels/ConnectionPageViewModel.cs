@@ -1,6 +1,7 @@
 ﻿using KeyVendor.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -20,65 +21,50 @@ namespace KeyVendor.ViewModels
             }
             else
             {
-                StartRefreshing();
+                StartRefreshingAsync();
             }
 
             DeviceList = _bluetooth.DeviceList;
             InitializeCommands();
         }
 
-        public void StartRefreshing()
+        public async void StartRefreshingAsync()
         {
-            if (_bluetooth.IsRefreshing)
+            if (_bluetooth.IsDiscovering)
                 return;
 
-            if (!_bluetooth.IsBluetoothOn)
-                _bluetooth.IsBluetoothOn = true;
+            ButtonText = _buttonStopRefreshingText;
 
-            int iteration = 0;
+            await _bluetooth.TurnOnBluetoothAsync(1000, 25);
+            await _bluetooth.StartDeviceDiscoveryAsync(1000, 25);
 
-            Device.StartTimer(TimeSpan.FromMilliseconds(50), () =>
+            await Task.Run(async () =>
             {
-                if (_bluetooth.IsBluetoothOn)
+                while (_bluetooth.IsDiscovering)
                 {
-                    _bluetooth.StartRefreshing();
-
-                    Device.StartTimer(TimeSpan.FromMilliseconds(50), () =>
+                    if (SelectedDevice == null || !DeviceList.Contains(SelectedDevice))
                     {
-                        if (SelectedDevice == null || !DeviceList.Contains(SelectedDevice))
-                            foreach (var item in DeviceList)
-                                if ((_user.SavedAddress == "" && item.Name == _defaultDeviceName) ||
-                                        item.Address == _user.SavedAddress)
-                                {
-                                    SelectedDevice = item;
-                                    break;
-                                }
+                        foreach (var item in DeviceList)
+                        {
+                            if ((_user.SavedAddress == "" && item.Name == _defaultDeviceName) ||
+                                    item.Address == _user.SavedAddress)
+                            {
+                                SelectedDevice = item;
+                                break;
+                            }
+                        }
+                    }
 
-                        if (!_bluetooth.IsRefreshing)
-                            ButtonText = _buttonStartRefreshingText;
-
-                        return _bluetooth.IsRefreshing;
-                    });
-
-                    return false;
+                    await Task.Delay(25);
                 }
-                else if (iteration >= 200)
-                {
-                    return false;
-                }
-
-                iteration++;
-                return true;
             });
 
-            ButtonText = _buttonStopRefreshingText;
+            ButtonText = _buttonStartRefreshingText;
         }
         public void StopRefreshing()
         {
-            if (_bluetooth.IsRefreshing)
-                _bluetooth.StopRefreshing();
-
-            ButtonText = _buttonStartRefreshingText;
+            if (_bluetooth.IsDiscovering)
+                _bluetooth.StopDiscovering();
         }
 
         public ObservableCollection<BluetoothDevice> DeviceList
@@ -107,10 +93,10 @@ namespace KeyVendor.ViewModels
         {
             SwitchRefreshingCommand = new Command(() => 
             {
-                if (_bluetooth.IsRefreshing)
+                if (_bluetooth.IsDiscovering)
                     StopRefreshing();
                 else
-                    StartRefreshing();
+                    StartRefreshingAsync();
             });
         }
 

@@ -26,7 +26,7 @@ namespace KeyVendor.Droid
             Forms.Context.RegisterReceiver(receiver, filter);
         }
 
-        public void StartRefreshing()
+        public void StartDiscovering()
         {
             if (bluetoothAdapter == null)
                 return;
@@ -44,7 +44,7 @@ namespace KeyVendor.Droid
 
             bluetoothAdapter.StartDiscovery();
         }
-        public void StopRefreshing()
+        public void StopDiscovering()
         {
             if (bluetoothAdapter == null)
                 return;
@@ -53,7 +53,7 @@ namespace KeyVendor.Droid
         }
         public void CreateBond(string address)
         {
-            StopRefreshing();
+            StopDiscovering();
 
             if (bluetoothAdapter == null)
                 return;
@@ -66,7 +66,7 @@ namespace KeyVendor.Droid
         }
         public void RemoveBond()
         {
-            StopRefreshing();
+            StopDiscovering();
 
             if (device != null && device.BondState == Bond.Bonded)
             {
@@ -76,7 +76,7 @@ namespace KeyVendor.Droid
         }
         public void OpenConnection()
         {
-            StopRefreshing();
+            StopDiscovering();
 
             if (bluetoothAdapter == null)
                 return;
@@ -102,7 +102,7 @@ namespace KeyVendor.Droid
         }
         public void CloseConnection()
         {
-            StopRefreshing();
+            StopDiscovering();
 
             if (socket != null)
                 socket.Close();
@@ -181,7 +181,7 @@ namespace KeyVendor.Droid
                     return true;
             }
         }
-        public bool IsRefreshing
+        public bool IsDiscovering
         {
             get
             {
