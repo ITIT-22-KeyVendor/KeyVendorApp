@@ -31,6 +31,7 @@ namespace KeyVendor.Droid
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
 
+            Window.SetSoftInputMode(Android.Views.SoftInput.AdjustResize);
             Window.SetStatusBarColor(Android.Graphics.Color.DimGray);
 
             await TryToGetPermissions();
