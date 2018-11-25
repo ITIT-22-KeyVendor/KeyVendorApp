@@ -160,6 +160,9 @@
     <Content Include="Assets\Wide\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide\Wide310x150Logo.scale-400.png" />
+    <Content Include="Images\clear.scale-100.png" />
+    <Content Include="Images\clear.scale-200.png" />
+    <Content Include="Images\clear.scale-300.png" />
     <Content Include="Images\connection.scale-100.png" />
     <Content Include="Images\connection.scale-200.png" />
     <Content Include="Images\connection.scale-300.png" />

@@ -11,6 +11,18 @@
                     Android="0"
                     WinPhone="0"/>
     </ContentPage.Padding>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Очистити"
+                     Order="Primary"
+                     Command="{Binding ClearListCommand}">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource"
+                            iOS="clear.png"
+                            Android="clear.png"
+                            WinPhone="Images/clear.png"/>
+            </ToolbarItem.Icon>
+        </ToolbarItem>        
+    </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style TargetType="View">
@@ -34,39 +46,67 @@
     </ContentPage.Resources>
 
     <AbsoluteLayout>
-        <Image AbsoluteLayout.LayoutBounds="0,0,1,1"
-               AbsoluteLayout.LayoutFlags="All"
-               Source="{local:ImageResourceExtension KeyVendor.Views.Images.background_gray.png}"
-               Aspect="AspectFill"/>
+        <Image 
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            Source="{local:ImageResourceExtension KeyVendor.Views.Images.background_gray.png}"
+            Aspect="AspectFill"/>
 
-        <Grid 
+        <ScrollView
             AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
             AbsoluteLayout.LayoutFlags="All">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <Label
-                Text="Задайте новий список ключів. Кожен ключ - з нового рядка"
-                Margin="0,5,0,0"
-                Grid.Row="0"/>
-            <Editor
-                Grid.Row="1"
-                />
-            <ActivityIndicator
+                <Label
+                    Text="Задайте новий список ключів. Кожен ключ - з нового рядка"
+                    Margin="0,5,0,0"
+                    Grid.Row="0"/>
+                <BoxView 
+                    Grid.Row="1" 
+                    Opacity="0"
+                    HeightRequest="200"/>
+                <Editor
+                    Grid.Row="1"/>
+                <Button
+                    Text="Задати новий список"
+                    Command="{Binding SetKeyListCommand}"
+                    Grid.Row="2"/>
+            </Grid>
+        </ScrollView>
+
+        <AbsoluteLayout
+            x:Name="activityIndicationOverlay"
+            AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="White"
+            Opacity="0.85"
+            IsVisible="{Binding IsActivityIndicationVisible}">
+            <Grid
+                AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+                AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Label
+                    Grid.Row="0"
+                    VerticalOptions="Center"
+                    FontSize="Large"
+                    Text="{Binding ActivityIndicationText}"/>
+                <ActivityIndicator
                     Grid.Row="1"
                     VerticalOptions="Center"
                     HorizontalOptions="Fill"
-                    IsRunning="{Binding IsActivityIndicationVisible}"
-                    IsVisible="{Binding IsActivityIndicationVisible}"/>
-            <Button
-                Text="Задати новий список"
-                Command="{Binding SetKeyListCommand}"
-                Grid.Row="2"/>
-        </Grid>
-
+                    IsRunning="{Binding IsActivityIndicationVisible}"/>
+            </Grid>
+        </AbsoluteLayout>
+        
         <AbsoluteLayout
             x:Name="messageOverlay"
             AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"

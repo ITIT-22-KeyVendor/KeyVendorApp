@@ -220,4 +220,13 @@
   <ItemGroup>
     <BundleResource Include="Resources\refresh%403x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\clear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\clear%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\clear%403x.png" />
+  </ItemGroup>
 </Project>

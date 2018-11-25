@@ -33,7 +33,7 @@ namespace KeyVendor.ViewModels
             // omit sign in process
             /*
             _user.HasAdminRights = true;
-            OnOpenVendingPage(this, new VendingPageViewModel(_user, _bluetoothManager));
+            OnOpenVendingPage(this, new VendingPageViewModel(_user, _bluetooth));
             return;
             */
             if (!_bluetooth.IsBluetoothAvailable)
