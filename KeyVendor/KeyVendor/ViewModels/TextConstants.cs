@@ -27,11 +27,15 @@ namespace KeyVendor.ViewModels
             "Не вдалось надіслати заявку на реєстрацію";
         public static string ErrorGetKeyListFail { get; } =
             "Не вдалось отримати список ключів";
+        public static string ErrorSetKeyListFail { get; } =
+            "Не вдалось задати новий список ключів";
         public static string ErrorGetKeyFail { get; } =
             "Сталась помилка. Спробуйте перепідключитися та повторити операцію";
 
         public static string SuccessApplicationSent { get; } =
             "Заявку на реєстрацію надіслано. Після підтвердження адміністратором, Ви зможете увійти у цю систему";
+        public static string SuccessKeyListSet { get; } =
+            "Новий список ключів задано. Оновіть сторінку видачі ключів щоб його побачити";
 
         public static string ButtonClose { get; } =
             "Закрити";

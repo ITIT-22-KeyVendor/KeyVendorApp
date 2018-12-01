@@ -14,7 +14,7 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Очистити"
                      Order="Primary"
-                     Command="{Binding ClearListCommand}">
+                     Command="{Binding ClearKeyListCommand}">
             <ToolbarItem.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource"
                             iOS="clear.png"
@@ -71,7 +71,8 @@
                     Opacity="0"
                     HeightRequest="200"/>
                 <Editor
-                    Grid.Row="1"/>
+                    Grid.Row="1"
+                    Text="{Binding KeyList}"/>
                 <Button
                     Text="Задати новий список"
                     Command="{Binding SetKeyListCommand}"
