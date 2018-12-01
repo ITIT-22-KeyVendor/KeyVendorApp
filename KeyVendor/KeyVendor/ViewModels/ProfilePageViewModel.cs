@@ -8,8 +8,6 @@ namespace KeyVendor.ViewModels
     {
         public ProfilePageViewModel(KeyVendorUser user)
         {
-            InitializeCommands();
-
             _user = user;
 
             UserName = user.Name;
@@ -58,13 +56,13 @@ namespace KeyVendor.ViewModels
 
         public ICommand SaveChangesCommand { get; protected set; }
 
-        private void InitializeCommands()
+        protected override void InitializeCommands()
         {
             SaveChangesCommand = new Command(
                 () => { SaveChanges(); },
                 () => { return InfoChanged; });
         }
-        public override void UpdateCommands()
+        protected override void UpdateCommands()
         {
             ((Command)SaveChangesCommand).ChangeCanExecute();
         }

@@ -17,8 +17,6 @@ namespace KeyVendor.ViewModels
             DeviceList = _bluetooth.DeviceList;
 
             StartRefreshingAsync();
-            
-            InitializeCommands();
         }
 
         public async void StartRefreshingAsync()
@@ -88,7 +86,7 @@ namespace KeyVendor.ViewModels
 
         public ICommand SwitchRefreshingCommand { get; protected set; }
 
-        private void InitializeCommands()
+        protected override void InitializeCommands()
         {
             SwitchRefreshingCommand = new Command(() => 
             {

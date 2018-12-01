@@ -11,21 +11,43 @@ namespace KeyVendor.ViewModels
         public ViewModelBase()
         {
             MessageButtonCommand = new Command(() => { IsMessageVisible = false; });
+            InitializeCommands();            
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public virtual void UpdateCommands()
+        protected virtual void InitializeCommands()
         {
 
         }
-        public void ShowMessage(string message, string button)
+        protected virtual void UpdateCommands()
         {
-            Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+
+        }
+
+        protected void ShowMessage(string message, string button)
+        {
+            Device.BeginInvokeOnMainThread(() =>
             {
                 MessageText = message;
                 MessageButtonText = button;
                 IsMessageVisible = true;
+            });
+        }
+        protected void StartActivityIndication(string text)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                IsActivityIndicationVisible = true;
+                ActivityIndicationText = text;
+            });
+        }
+        protected void StopActivityIndication()
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                IsActivityIndicationVisible = false;
+                ActivityIndicationText = "";
             });
         }
 
@@ -35,7 +57,7 @@ namespace KeyVendor.ViewModels
             set
             {
                 if (SetProperty(ref _isMessageVisible, value))
-                    UpdateCommands();
+                    Device.BeginInvokeOnMainThread(() => UpdateCommands());
             }
         }
         public string MessageText
@@ -47,6 +69,20 @@ namespace KeyVendor.ViewModels
         {
             get { return _messageButtonText; }
             set { SetProperty(ref _messageButtonText, value); }
+        }
+        public bool IsActivityIndicationVisible
+        {
+            get { return _isActivityIndicationVisible; }
+            set
+            {
+                if (SetProperty(ref _isActivityIndicationVisible, value))
+                    Device.BeginInvokeOnMainThread(() => UpdateCommands());
+            }
+        }
+        public string ActivityIndicationText
+        {
+            get { return _activityIndicationText; }
+            set { SetProperty(ref _activityIndicationText, value); }
         }
 
         public ICommand MessageButtonCommand { get; protected set; }
@@ -69,5 +105,7 @@ namespace KeyVendor.ViewModels
         private bool _isMessageVisible;
         private string _messageText;
         private string _messageButtonText;
+        private bool _isActivityIndicationVisible;
+        private string _activityIndicationText;
     }
 }

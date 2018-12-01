@@ -14,13 +14,12 @@ namespace KeyVendor.ViewModels
             _bluetoothManager = bluetooth;
             _user = user;
 
-            InitCommands();
             KeyList = "";
         }
 
         public async void SetKeyList()
         {
-            StartActivityIndication("Іде процес задання нового списку ключів...");
+            StartActivityIndication(TextConstants.ActivitySettingKeyList);
 
             await Task.Run(async () =>
             {
@@ -46,17 +45,7 @@ namespace KeyVendor.ViewModels
 
             StopActivityIndication();
         }
-
-        public bool IsActivityIndicationVisible
-        {
-            get { return _isActivityIndicationVisible; }
-            set { SetProperty(ref _isActivityIndicationVisible, value); }
-        }
-        public string ActivityIndicationText
-        {
-            get { return _activityIndicationText; }
-            set { SetProperty(ref _activityIndicationText, value); }
-        }
+        
         public string KeyList
         {
             get { return _keyList; }
@@ -70,7 +59,7 @@ namespace KeyVendor.ViewModels
         public ICommand SetKeyListCommand { get; protected set; }
         public ICommand ClearKeyListCommand { get; protected set; }
 
-        private void InitCommands()
+        protected override void InitializeCommands()
         {
             SetKeyListCommand = new Command(
                 () => { SetKeyList(); },
@@ -79,29 +68,13 @@ namespace KeyVendor.ViewModels
                 () => { KeyList = ""; },
                 () => { return KeyList != "" && !IsMessageVisible && !IsActivityIndicationVisible; });
         }
-        public override void UpdateCommands()
+        protected override void UpdateCommands()
         {
             ((Command)SetKeyListCommand).ChangeCanExecute();
             ((Command)ClearKeyListCommand).ChangeCanExecute();
         }
-
-        private void StartActivityIndication(string text)
-        {
-            IsActivityIndicationVisible = true;
-            ActivityIndicationText = text;
-            UpdateCommands();
-        }
-        private void StopActivityIndication()
-        {
-            IsActivityIndicationVisible = false;
-            ActivityIndicationText = "";
-            UpdateCommands();
-        }
-
-        private bool _isActivityIndicationVisible;
-        private string _activityIndicationText;
+                
         private string _keyList;
-
         private IBluetoothManager _bluetoothManager;
         private KeyVendorUser _user;
     }

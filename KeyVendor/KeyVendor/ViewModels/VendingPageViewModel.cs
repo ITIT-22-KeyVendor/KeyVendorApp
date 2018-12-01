@@ -18,7 +18,6 @@ namespace KeyVendor.ViewModels
 
             KeyList = new ObservableCollection<string>();
 
-            InitializeCommands();
             GetKeyListAsync();
         }
 
@@ -48,11 +47,6 @@ namespace KeyVendor.ViewModels
                 if (SetProperty(ref _selectedKey, value))
                     UpdateCommands();
             }
-        }
-        public bool IsActivityIndicationVisible
-        {
-            get { return _isActivityIndicationVisible; }
-            set { SetProperty(ref _isActivityIndicationVisible, value); }
         }
         public bool GettingKey
         {
@@ -135,7 +129,7 @@ namespace KeyVendor.ViewModels
             GettingKey = false;
         }
 
-        public void InitializeCommands()
+        protected override void InitializeCommands()
         {
             OpenKeyManagementPageCommand = new Command(
                 () => { OpenKeyManagementPage(); },
@@ -153,7 +147,7 @@ namespace KeyVendor.ViewModels
                 () => { if (SelectedKey != null) GetKeyAsync(); },
                 () => { return SelectedKey != null && !GettingKey; });
         }
-        public override void UpdateCommands()
+        protected override void UpdateCommands()
         {
             ((Command)OpenKeyManagementPageCommand).ChangeCanExecute();
             ((Command)OpenUserManagementPageCommand).ChangeCanExecute();
@@ -168,7 +162,6 @@ namespace KeyVendor.ViewModels
         private string _selectedKey;
 
         private bool _gettingKey;
-        private bool _isActivityIndicationVisible;
         private bool _isToolbarVisible;
     }
 }
