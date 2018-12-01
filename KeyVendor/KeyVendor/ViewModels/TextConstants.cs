@@ -18,6 +18,8 @@ namespace KeyVendor.ViewModels
             "Іде підключення. Будь ласка зачекайте...";
         public static string ActivityRegistration { get; } =
             "Надсилається заявка на реєстрацію...";
+        public static string ActivitySettingKeyList { get; } =
+            "Іде процес задання нового списку ключів...";
 
         public static string ErrorTryAgain { get; } =
             "Сталась помилка, спробуйте ще раз";

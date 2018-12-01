@@ -11,7 +11,6 @@ namespace KeyVendor.ViewModels
     {
         public MainPageViewModel()
         {
-            InitializeCommands();
             _bluetooth = DependencyService.Get<IBluetoothManager>();
         }
 
@@ -189,16 +188,6 @@ namespace KeyVendor.ViewModels
                 }                
             }
         }
-        public bool IsActivityIndicationVisible
-        {
-            get { return _isActivityIndicationVisible; }
-            set { SetProperty(ref _isActivityIndicationVisible, value); }
-        }
-        public string ActivityIndicationText
-        {
-            get { return _activityIndicationText; }
-            set { SetProperty(ref _activityIndicationText, value); }
-        }
         public bool IsRegistrationOverlayVisible
         {
             get { return _isRegistrationOverlayVisible; }
@@ -253,17 +242,17 @@ namespace KeyVendor.ViewModels
             return await terminal.ExecuteCommandAsync(adminCheckCommand, timeout, delay);
         }
 
-        private void InitializeCommands()
+        protected override void InitializeCommands()
         {
             OpenConnectionPageCommand = new Command(
                 () => { OpenConnectionPage(); },
-                () => { return !IsNewUser && !IsActivityIndicationVisible; });
+                () => { return !IsNewUser && !IsActivityIndicationVisible && !IsMessageVisible; });
             OpenProfilePageCommand = new Command(
                 () => { OpenProfilePage(); },
-                () => { return !IsActivityIndicationVisible; });
+                () => { return !IsActivityIndicationVisible && !IsMessageVisible; });
             OpenHelpPageCommand = new Command(
                 () => { OpenHelpPage(); },
-                () => { return !IsNewUser && !IsActivityIndicationVisible; });
+                () => { return !IsNewUser && !IsActivityIndicationVisible && !IsMessageVisible; });
             ConnectCommand = new Command(
                 () => { ConnectAsync(); },
                 () => { return !IsNewUser && !IsActivityIndicationVisible; });
@@ -275,25 +264,14 @@ namespace KeyVendor.ViewModels
             CloseRegistrationOverlayCommand = new Command(
                 () => { IsRegistrationOverlayVisible = false; });
         }
-        public override void UpdateCommands()
+        protected override void UpdateCommands()
         {
             ((Command)OpenConnectionPageCommand).ChangeCanExecute();
             ((Command)OpenProfilePageCommand).ChangeCanExecute();
             ((Command)OpenHelpPageCommand).ChangeCanExecute();
             ((Command)ConnectCommand).ChangeCanExecute();
         }
-        private void StartActivityIndication(string text)
-        {
-            IsActivityIndicationVisible = true;
-            ActivityIndicationText = text;
-            UpdateCommands();
-        }
-        private void StopActivityIndication()
-        {
-            IsActivityIndicationVisible = false;
-            ActivityIndicationText = "";
-            UpdateCommands();
-        }
+
         private T GetDictionaryEntry<T>(IDictionary<string, object> dictionary, string key, T defaultValue)
         {
             if (dictionary.ContainsKey(key))
@@ -302,10 +280,7 @@ namespace KeyVendor.ViewModels
             return defaultValue;
         }
 
-        private bool _isActivityIndicationVisible;
-        private string _activityIndicationText;
         private bool _isRegistrationOverlayVisible;
-
         private KeyVendorUser _user = new KeyVendorUser();
         private IBluetoothManager _bluetooth;
     }

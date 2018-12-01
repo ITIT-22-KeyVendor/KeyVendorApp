@@ -6,6 +6,9 @@ namespace KeyVendor.ViewModels
 {
     public class HelpPageViewModel : ViewModelBase
     {
+        public HelpPageViewModel()
+        {
 
+        }
     }
 }
