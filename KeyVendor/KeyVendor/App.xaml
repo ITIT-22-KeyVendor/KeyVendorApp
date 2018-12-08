@@ -2,7 +2,55 @@
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="KeyVendor.App">
-	<Application.Resources>
     
-	</Application.Resources>
+	<Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="primaryDark">#3e3e3e</Color>
+            <Color x:Key="primaryLight">#ffffff</Color>
+            <Color x:Key="primary">#696969</Color>
+            <Color x:Key="textPrimary">#212121</Color>
+            <Color x:Key="textSecondary">#757575</Color>
+            <Color x:Key="accent">#3e3e3e</Color>
+            <Color x:Key="divider">#bdbdbd</Color>
+
+            <Style TargetType="View">
+                <Setter Property="HorizontalOptions" Value="Center"/>
+            </Style>
+            <Style TargetType="NavigationPage">
+                <Setter Property="BarBackgroundColor" Value="{DynamicResource primary}"/>
+                <Setter Property="BarTextColor" Value="{DynamicResource primaryLight}"/>
+            </Style>
+            <Style TargetType="ActivityIndicator">
+                <Setter Property="Color" Value="{DynamicResource accent}"/>
+            </Style>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource textSecondary}"/>
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
+            </Style>
+            <Style TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="{DynamicResource primaryLight}"/>
+                <Setter Property="TextColor" Value="{DynamicResource textSecondary}"/>
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="HorizontalTextAlignment" Value="Start"/>
+                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
+            </Style>
+            <Style TargetType="Editor">
+                <Setter Property="BackgroundColor" Value="{DynamicResource primaryLight}"/>
+                <Setter Property="TextColor" Value="{DynamicResource textSecondary}"/>
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="HeightRequest" Value="50"/>
+                <Setter Property="BorderRadius" Value="25"/>
+                <Setter Property="BackgroundColor" Value="{DynamicResource primary}"/>
+                <Setter Property="TextColor" Value="{DynamicResource primaryLight}"/>
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>

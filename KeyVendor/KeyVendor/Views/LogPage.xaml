@@ -4,28 +4,37 @@
              x:Class="KeyVendor.Views.LogPage"
              xmlns:local="clr-namespace:KeyVendor.Views"
              Title="Облікові дані">
-    
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <Style TargetType="View">
-                <Setter Property="HorizontalOptions" Value="Center"/>
-            </Style>
-            <Style TargetType="Label">
-                <Setter Property="TextColor" Value="Gray"/>
-                <Setter Property="FontSize" Value="Medium"/>
-                <Setter Property="HorizontalTextAlignment" Value="Center"/>
-                <Setter Property="VerticalTextAlignment" Value="Center"/>
-                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
-            </Style>
-            <Style TargetType="Button">
-                <Setter Property="HeightRequest" Value="50"/>
-                <Setter Property="BackgroundColor" Value="DimGray"/>
-                <Setter Property="TextColor" Value="White"/>
-                <Setter Property="FontSize" Value="Medium"/>
-                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
-            </Style>
-        </ResourceDictionary>
-     </ContentPage.Resources>
+
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness"
+                    iOS="0,20,0,0"
+                    Android="0"
+                    WinPhone="0"/>
+    </ContentPage.Padding>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="Оновити"
+            Order="Primary"
+            Command="{Binding GetLogCommand}">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource"
+                            iOS="refresh.png"
+                            Android="refresh.png"
+                            WinPhone="Images/refresh.png"/>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
+        <ToolbarItem
+            Text="Очистити"
+            Order="Primary"
+            Command="{Binding ClearLogCommand}">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource"
+                            iOS="clear.png"
+                            Android="clear.png"
+                            WinPhone="Images/clear.png"/>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
 
     <AbsoluteLayout>
         <Image AbsoluteLayout.LayoutBounds="0,0,1,1"
@@ -33,51 +42,116 @@
                Source="{local:ImageResourceExtension KeyVendor.Views.Images.background_gray.png}"
                Aspect="AspectFill"/>
 
-        <Grid 
+        <Grid
             AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
             AbsoluteLayout.LayoutFlags="All">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Label
-                Text="Останні 50 записів"
-                Margin="0,5,0,0"
-                Grid.Row="0"/>
             <ListView
-                Margin="0,10"
+                Margin="0,5,0,5"
                 ItemsSource="{Binding LogList}"
-                SeparatorVisibility="None"
+                SeparatorVisibility="Default"
                 HasUnevenRows="True"
-                Grid.Row="1">
+                Grid.Row="0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <ContentView>
-                                <StackLayout Padding="15,10">
-                                    <Label Text="{Binding .}"
-                                           HorizontalTextAlignment="Center"
-                                           VerticalOptions="Center"
-                                           FontAttributes="Bold"/>
+                            <ContentView
+                                BackgroundColor="{DynamicResource primaryLight}">
+                                <StackLayout Padding="10,10">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label
+                                            Text="{Binding Time}"
+                                            HorizontalTextAlignment="Start"
+                                            VerticalOptions="Center"
+                                            FontSize="Small"
+                                            FontAttributes="Bold"/>
+                                        <Label 
+                                            Text="{Binding UserName}"
+                                            HorizontalTextAlignment="Start"
+                                            VerticalOptions="Center"
+                                            FontSize="Small"
+                                            FontAttributes="Bold"/>
+                                    </StackLayout>
+                                    <Label Text="{Binding UUID}"
+                                           FontSize="Small"
+                                           HorizontalTextAlignment="Start"
+                                           VerticalOptions="Center"/>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label 
+                                            Text="Команда: "
+                                            FontAttributes="Bold"
+                                            FontSize="Small"/>
+                                        <Label 
+                                            Text="{Binding Command}"
+                                            FontSize="Small"/>
+                                        <Label 
+                                            Text="|"
+                                            Margin="5,0"/>
+                                        <Label 
+                                            Text="{Binding Data}"
+                                            FontSize="Small"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Відповідь: "
+                                               FontAttributes="Bold"
+                                               FontSize="Small"/>
+                                        <Label Text="{Binding Answer}"
+                                               FontSize="Small"/>
+                                    </StackLayout>
                                 </StackLayout>
                             </ContentView>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <ActivityIndicator
+            <StackLayout
+                Padding="0,10,0,0"
+                Orientation="Horizontal"
+                Grid.Row="1">
+                <Button
+                    Text="Назад"
+                    WidthRequest="100"
+                    Command="{Binding PreviousLogCommand}"
+                    HorizontalOptions="CenterAndExpand"/>
+                <Button
+                    Text="Вперед"
+                    WidthRequest="100"
+                    Command="{Binding NextLogCommand}"
+                    HorizontalOptions="CenterAndExpand"/>
+            </StackLayout>
+        </Grid>
+
+        <AbsoluteLayout
+            x:Name="activityIndicationOverlay"
+            AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="White"
+            Opacity="0.85"
+            IsVisible="{Binding IsActivityIndicationVisible}">
+            <Grid
+                AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+                AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Label
+                    Grid.Row="0"
+                    VerticalOptions="Center"
+                    FontSize="Large"
+                    Text="{Binding ActivityIndicationText}"/>
+                <ActivityIndicator
                     Grid.Row="1"
                     VerticalOptions="Center"
                     HorizontalOptions="Fill"
-                    IsRunning="{Binding IsActivityIndicationVisible}"
-                    IsVisible="{Binding IsActivityIndicationVisible}"/>
-            <Button
-                Text="Очистити облікові дані"
-                Command="{Binding ClearLogCommand}"
-                Grid.Row="2"/>
-        </Grid>
+                    IsRunning="{Binding IsActivityIndicationVisible}"/>
+            </Grid>
+        </AbsoluteLayout>
 
         <AbsoluteLayout
             x:Name="messageOverlay"

@@ -32,7 +32,7 @@ namespace KeyVendor.Droid
             LoadApplication(new App());
 
             Window.SetSoftInputMode(Android.Views.SoftInput.AdjustResize);
-            Window.SetStatusBarColor(Android.Graphics.Color.DimGray);
+            Window.SetStatusBarColor(Android.Graphics.Color.Rgb(62,62,62));
 
             await TryToGetPermissions();
         }

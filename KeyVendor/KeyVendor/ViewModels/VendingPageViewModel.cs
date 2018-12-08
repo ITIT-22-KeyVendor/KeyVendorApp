@@ -15,7 +15,6 @@ namespace KeyVendor.ViewModels
             _user = user;
 
             IsToolbarVisible = _user.HasAdminRights;
-
             KeyList = new ObservableCollection<string>();
 
             GetKeyListAsync();

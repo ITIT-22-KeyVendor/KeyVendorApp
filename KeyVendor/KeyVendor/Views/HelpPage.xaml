@@ -4,27 +4,13 @@
              xmlns:local="clr-namespace:KeyVendor.Views"
              x:Class="KeyVendor.Views.HelpPage"
              Title="Про програму">
-    
+
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness"
                     iOS="0,20,0,0"
                     Android="0"
                     WinPhone="0"/>
     </ContentPage.Padding>
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <Style TargetType="View">
-                <Setter Property="HorizontalOptions" Value="Center"/>
-            </Style>
-            <Style TargetType="Label">
-                <Setter Property="TextColor" Value="DimGray"/>
-                <Setter Property="FontSize" Value="Small"/>
-                <Setter Property="HorizontalTextAlignment" Value="Center"/>
-                <Setter Property="VerticalTextAlignment" Value="Center"/>
-                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
-            </Style>
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <AbsoluteLayout>
         <Image AbsoluteLayout.LayoutBounds="0,0,1,1"
@@ -48,7 +34,8 @@
                     HorizontalTextAlignment="Start"
                     VerticalTextAlignment="Start"
                     HorizontalOptions="Fill"
-                    VerticalOptions="Start"/>
+                    VerticalOptions="Start"
+                    FontSize="Small"/>
             </ScrollView>
             <StackLayout
                 Grid.Row="1"
@@ -59,14 +46,16 @@
                     HorizontalTextAlignment="Start"
                     VerticalTextAlignment="Start"
                     HorizontalOptions="Start"
-                    VerticalOptions="Start"/>
+                    VerticalOptions="Start"
+                    FontSize="Small"/>
                 <Label
                     Text="Степанов М.В., Стельмах А.В., Зарічинський Б.О."
                     FontAttributes="Italic"
                     HorizontalTextAlignment="Start"
                     VerticalTextAlignment="Start"
                     HorizontalOptions="Start"
-                    VerticalOptions="Start"/>
+                    VerticalOptions="Start"
+                    FontSize="Small"/>
             </StackLayout>
         </Grid>
     </AbsoluteLayout>
