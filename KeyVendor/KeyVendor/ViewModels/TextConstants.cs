@@ -20,6 +20,10 @@ namespace KeyVendor.ViewModels
             "Надсилається заявка на реєстрацію...";
         public static string ActivitySettingKeyList { get; } =
             "Іде процес задання нового списку ключів...";
+        public static string ActivityGettingLog { get; } =
+            "Іде процес отримання облікових даних...";
+        public static string ActivityClearingLog { get; } =
+            "Іде процес очищення облікових даних...";
 
         public static string ErrorTryAgain { get; } =
             "Сталась помилка, спробуйте ще раз";
@@ -33,11 +37,17 @@ namespace KeyVendor.ViewModels
             "Не вдалось задати новий список ключів";
         public static string ErrorGetKeyFail { get; } =
             "Сталась помилка. Спробуйте перепідключитися та повторити операцію";
+        public static string ErrorGetLogFail { get; } =
+            "Не вдалось отримати облікові дані";
+        public static string ErrorClearLogFail { get; } =
+            "Не вдалось очистити облікові дані";
 
         public static string SuccessApplicationSent { get; } =
             "Заявку на реєстрацію надіслано. Після підтвердження адміністратором, Ви зможете увійти у цю систему";
         public static string SuccessKeyListSet { get; } =
             "Новий список ключів задано. Оновіть сторінку видачі ключів щоб його побачити";
+        public static string SuccessLogCleared { get; } =
+            "Облікові дані успішно очищено";
 
         public static string ButtonClose { get; } =
             "Закрити";

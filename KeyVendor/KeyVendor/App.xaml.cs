@@ -19,11 +19,7 @@ namespace KeyVendor
             mainViewModel.OnOpenHelpPage += OpenHelpPage;
             mainViewModel.OnOpenVendingPage += OpenVendingPage;
 
-            MainPage = new NavigationPage(new MainPage(mainViewModel))
-            {
-                BarBackgroundColor = Color.DimGray,
-                BarTextColor = Color.White
-            };
+            MainPage = new NavigationPage(new MainPage(mainViewModel));
 		}
 
 		protected override void OnStart ()

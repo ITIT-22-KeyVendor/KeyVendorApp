@@ -11,27 +11,6 @@
                     Android="0"
                     WinPhone="0"/>
     </ContentPage.Padding>
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <Style TargetType="View">
-                <Setter Property="HorizontalOptions" Value="Center"/>
-            </Style>
-            <Style TargetType="Label">
-                <Setter Property="TextColor" Value="Gray"/>
-                <Setter Property="FontSize" Value="Medium"/>
-                <Setter Property="HorizontalTextAlignment" Value="Center"/>
-                <Setter Property="VerticalTextAlignment" Value="Center"/>
-                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
-            </Style>
-            <Style TargetType="Button">
-                <Setter Property="HeightRequest" Value="50"/>
-                <Setter Property="BackgroundColor" Value="DimGray"/>
-                <Setter Property="TextColor" Value="White"/>
-                <Setter Property="FontSize" Value="Medium"/>
-                <Setter Property="FontFamily" Value="Droid Sans Mono"/>
-            </Style>
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <AbsoluteLayout>
         <Image AbsoluteLayout.LayoutBounds="0,0,1,1"

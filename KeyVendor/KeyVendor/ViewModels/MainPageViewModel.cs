@@ -29,12 +29,6 @@ namespace KeyVendor.ViewModels
         }
         public async void ConnectAsync()
         {
-            // omit sign in process
-            /*
-            _user.HasAdminRights = true;
-            OnOpenVendingPage(this, new VendingPageViewModel(_user, _bluetooth));
-            return;
-            */
             if (!_bluetooth.IsBluetoothAvailable)
             {
                 ShowMessage(TextConstants.BluetoothUnavailable, TextConstants.ButtonClose);
