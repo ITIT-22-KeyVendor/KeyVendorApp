@@ -19,6 +19,7 @@ namespace KeyVendor.ViewModels
         {
             _user.Name = UserName;
             _user.Description = UserDescription;
+            _user.IsInfoUpdated = true;
             InfoChanged = false;
         }
 

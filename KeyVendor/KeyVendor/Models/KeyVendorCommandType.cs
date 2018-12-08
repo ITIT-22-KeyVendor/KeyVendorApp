@@ -17,6 +17,7 @@ namespace KeyVendor.Models
         GetKey       = 11,
         GetLog       = 12,
         ClearLog     = 13,
-        AdminCheck   = 14
+        AdminCheck   = 14,
+        UpdateInfo   = 15
     }
 }

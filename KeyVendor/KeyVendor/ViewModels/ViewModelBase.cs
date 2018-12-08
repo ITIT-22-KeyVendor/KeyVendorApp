@@ -34,7 +34,7 @@ namespace KeyVendor.ViewModels
                 IsMessageVisible = true;
             });
         }
-        protected void StartActivityIndication(string text)
+        protected void StartActivityIndication(string text = "")
         {
             Device.BeginInvokeOnMainThread(() =>
             {

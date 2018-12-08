@@ -11,7 +11,7 @@ namespace KeyVendor.ViewModels
     {
         public KeyManagementPageViewModel(KeyVendorUser user, IBluetoothManager bluetooth)
         {
-            _bluetoothManager = bluetooth;
+            _bluetooth = bluetooth;
             _user = user;
 
             KeyList = "";
@@ -23,6 +23,17 @@ namespace KeyVendor.ViewModels
 
             await Task.Run(async () =>
             {
+                if (!await _bluetooth.TurnOnBluetoothAsync(1000, 25))
+                {
+                    ShowMessage(TextConstants.BluetoothTurnOnFail, TextConstants.ButtonClose);
+                    return;
+                }
+                if (!await _bluetooth.CreateConnectionAsync(5000, 50))
+                {
+                    ShowMessage(TextConstants.BluetoothConnectionFail, TextConstants.ButtonClose);
+                    return;
+                }
+
                 var splittedData = KeyList.Split('\n').Where(key => 
                     key != "" && key != "\n" && !String.IsNullOrWhiteSpace(key));
                 string data = String.Join("@", splittedData);
@@ -34,7 +45,7 @@ namespace KeyVendor.ViewModels
                     CommandType = KeyVendorCommandType.SetKeyList,
                     Data = data
                 };
-                KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetoothManager);
+                KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetooth);
                 KeyVendorAnswer answer = await terminal.ExecuteCommandAsync(setKeyListCommand, 10000, 100);
 
                 if (!answer.IsCorrect || answer.AnswerType != KeyVendorAnswerType.Success)
@@ -75,7 +86,7 @@ namespace KeyVendor.ViewModels
         }
                 
         private string _keyList;
-        private IBluetoothManager _bluetoothManager;
+        private IBluetoothManager _bluetooth;
         private KeyVendorUser _user;
     }
 }

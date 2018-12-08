@@ -7,7 +7,7 @@ namespace KeyVendor.Models
         public KeyVendorUser()
         {
             UUID = Name = Description = SavedAddress = "";
-            HasAdminRights = false;
+            HasAdminRights = IsInfoUpdated = false;
             IsNewUser = true;
         }
 
@@ -17,6 +17,7 @@ namespace KeyVendor.Models
         public string SavedAddress { get; set; }
         public bool HasAdminRights { get; set; }
         public bool IsNewUser { get; set; }
+        public bool IsInfoUpdated { get; set; }
 
         public static string GenerateUUID()
         {
