@@ -11,7 +11,7 @@ namespace KeyVendor.ViewModels
     {
         public VendingPageViewModel(KeyVendorUser user, IBluetoothManager bluetooth)
         {
-            _bluetoothManager = bluetooth;
+            _bluetooth = bluetooth;
             _user = user;
 
             IsToolbarVisible = _user.HasAdminRights;
@@ -23,15 +23,15 @@ namespace KeyVendor.ViewModels
 
         public void OpenKeyManagementPage()
         {
-            OnOpenKeyManagementPage(this, new KeyManagementPageViewModel(_user, _bluetoothManager));
+            OnOpenKeyManagementPage(this, new KeyManagementPageViewModel(_user, _bluetooth));
         }
         public void OpenUserManagementPage()
         {
-            OnOpenUserManagementPage(this, new UserManagementPageViewModel(_user, _bluetoothManager));
+            OnOpenUserManagementPage(this, new UserManagementPageViewModel(_user, _bluetooth));
         }
         public void OpenLogPage()
         {
-            OnOpenLogPage(this, new LogPageViewModel(_user, _bluetoothManager));
+            OnOpenLogPage(this, new LogPageViewModel(_user, _bluetooth));
         }
 
         public ObservableCollection<string> KeyList
@@ -54,7 +54,7 @@ namespace KeyVendor.ViewModels
             set
             {
                 if (SetProperty(ref _gettingKey, value))
-                    UpdateCommands();
+                    Device.BeginInvokeOnMainThread(() => UpdateCommands());
             }
         }
         public bool IsToolbarVisible
@@ -75,10 +75,22 @@ namespace KeyVendor.ViewModels
         
         private async void GetKeyListAsync()
         {
+            StartActivityIndication();
+
             await Task.Run(async () =>
             {
                 KeyList.Clear();
-                IsActivityIndicationVisible = true;
+
+                if (!await _bluetooth.TurnOnBluetoothAsync(1000, 25))
+                {
+                    ShowMessage(TextConstants.BluetoothTurnOnFail, TextConstants.ButtonClose);
+                    return;
+                }
+                if (!await _bluetooth.CreateConnectionAsync(5000, 50))
+                {
+                    ShowMessage(TextConstants.BluetoothConnectionFail, TextConstants.ButtonClose);
+                    return;
+                }
 
                 KeyVendorCommand getKeyListCommand = new KeyVendorCommand
                 {
@@ -87,12 +99,11 @@ namespace KeyVendor.ViewModels
                     CommandType = KeyVendorCommandType.GetKeyList,
                     Data = ""
                 };
-                KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetoothManager);
+                KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetooth);
                 KeyVendorAnswer answer = await terminal.ExecuteCommandAsync(getKeyListCommand, 5000, 100);
 
                 if (!answer.IsCorrect || answer.AnswerType != KeyVendorAnswerType.Success)
                 {
-                    IsActivityIndicationVisible = false;
                     ShowMessage(TextConstants.ErrorGetKeyListFail, TextConstants.ButtonClose);
                     return;
                 }
@@ -102,9 +113,9 @@ namespace KeyVendor.ViewModels
 
                 foreach (var item in dataArray)
                     KeyList.Add(item);
-
-                IsActivityIndicationVisible = false;
             });
+
+            StopActivityIndication();
         }
         private async void GetKeyAsync()
         {
@@ -112,6 +123,19 @@ namespace KeyVendor.ViewModels
 
             await Task.Run(async () =>
             {
+                if (!await _bluetooth.TurnOnBluetoothAsync(1000, 25))
+                {
+                    GettingKey = false;
+                    ShowMessage(TextConstants.BluetoothTurnOnFail, TextConstants.ButtonClose);
+                    return;
+                }
+                if (!await _bluetooth.CreateConnectionAsync(5000, 50))
+                {
+                    GettingKey = false;
+                    ShowMessage(TextConstants.BluetoothConnectionFail, TextConstants.ButtonClose);
+                    return;
+                }
+
                 KeyVendorCommand getKeyCommand = new KeyVendorCommand
                 {
                     UserUUID = _user.UUID,
@@ -119,7 +143,7 @@ namespace KeyVendor.ViewModels
                     CommandType = KeyVendorCommandType.GetKey,
                     Data = SelectedKey
                 };
-                KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetoothManager);
+                KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetooth);
                 KeyVendorAnswer answer = await terminal.ExecuteCommandAsync(getKeyCommand, 3000, 100);
 
                 if (!answer.IsCorrect || answer.AnswerType != KeyVendorAnswerType.Success)
@@ -156,7 +180,7 @@ namespace KeyVendor.ViewModels
             ((Command)GetKeyCommand).ChangeCanExecute();
         }
 
-        private IBluetoothManager _bluetoothManager;
+        private IBluetoothManager _bluetooth;
         private KeyVendorUser _user;
         private ObservableCollection<string> _keyList;
         private string _selectedKey;

@@ -112,6 +112,13 @@ namespace KeyVendor.ViewModels
                 return;
             }
 
+            if (_user.IsInfoUpdated)
+            {
+                KeyVendorAnswer updateUserInfoAnswer = await UpdateUserInfo(8000, 50);
+                if (updateUserInfoAnswer.IsCorrect && updateUserInfoAnswer.AnswerType == KeyVendorAnswerType.Success)
+                    _user.IsInfoUpdated = false;
+            }
+
             KeyVendorAnswer checkForAdminRightsAnswer = await CheckForAdminRights(3000, 50);
             _user.HasAdminRights = checkForAdminRightsAnswer.AnswerType == KeyVendorAnswerType.Success;
             
@@ -128,8 +135,14 @@ namespace KeyVendor.ViewModels
                 ShowMessage(TextConstants.BluetoothTurnOnFail, TextConstants.ButtonClose);
                 return;
             }
-            
-            KeyVendorAnswer answer = await SendApplication(3000, 100);
+            if (!await _bluetooth.CreateConnectionAsync(5000, 50))
+            {
+                StopActivityIndication();
+                ShowMessage(TextConstants.BluetoothConnectionFail, TextConstants.ButtonClose);
+                return;
+            }
+
+            KeyVendorAnswer answer = await SendApplication(5000, 100);
 
             if (!answer.IsCorrect || answer.AnswerType != KeyVendorAnswerType.Success)
             {
@@ -138,6 +151,7 @@ namespace KeyVendor.ViewModels
                 return;
             }
 
+            _user.IsInfoUpdated = false;
             StopActivityIndication();
             ShowMessage(TextConstants.SuccessApplicationSent, TextConstants.ButtonClose);
         }
@@ -149,6 +163,7 @@ namespace KeyVendor.ViewModels
             dictionary["UserName"] = _user.Name;
             dictionary["UserDescription"] = _user.Description;
             dictionary["SavedAddress"] = _user.SavedAddress;
+            dictionary["IsInfoUpdated"] = _user.IsInfoUpdated;
         }
         public void RestoreState(IDictionary<string, object> dictionary)
         {
@@ -157,6 +172,7 @@ namespace KeyVendor.ViewModels
             _user.Name = GetDictionaryEntry(dictionary, "UserName", "");
             _user.Description = GetDictionaryEntry(dictionary, "UserDescription", "");
             _user.SavedAddress = GetDictionaryEntry(dictionary, "SavedAddress", "");
+            _user.IsInfoUpdated = GetDictionaryEntry(dictionary, "IsInfoUpdated", false);
         }
         public void OnSleep()
         {
@@ -229,6 +245,18 @@ namespace KeyVendor.ViewModels
             };
             KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetooth);
             return await terminal.ExecuteCommandAsync(registerCommand, timeout, delay);
+        }
+        private async Task<KeyVendorAnswer> UpdateUserInfo(uint timeout, uint delay)
+        {
+            KeyVendorCommand updateUserInfoCommand = new KeyVendorCommand
+            {
+                UserUUID = _user.UUID,
+                Time = DateTime.Now,
+                CommandType = KeyVendorCommandType.UpdateInfo,
+                Data = _user.Name + "@" + _user.Description
+            };
+            KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetooth);
+            return await terminal.ExecuteCommandAsync(updateUserInfoCommand, timeout, delay);
         }
         private async Task<KeyVendorAnswer> CheckForAdminRights(uint timeout, uint delay)
         {
