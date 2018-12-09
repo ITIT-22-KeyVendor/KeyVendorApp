@@ -6,4 +6,5 @@
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
 	<application android:label="KeyVendor" android:icon="@mipmap/icon"></application>
+  <application android:hardwareAccelerated="false"></application>
 </manifest>

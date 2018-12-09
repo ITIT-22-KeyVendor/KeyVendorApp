@@ -11,8 +11,8 @@ namespace KeyVendor.Models
             _bluetoothManager = bluetoothManager;
 
             SplittingEnabled = true;
-            PartLenght = 32;
-            TimeToReadPart = 300;
+            PartLenght = 20;
+            TimeToReadPart = 200;
         }
 
         public async Task<KeyVendorAnswer> ExecuteCommandAsync(KeyVendorCommand command, uint timeout, uint delay)
