@@ -247,7 +247,7 @@ namespace KeyVendor.ViewModels
                 UserUUID = _user.UUID,
                 Time = DateTime.Now,
                 CommandType = KeyVendorCommandType.UpdateInfo,
-                Data = _user.Name + "@" + _user.Description
+                Data = (_user.Name + "@" + _user.Description).Replace(Environment.NewLine, "")
             };
             KeyVendorTerminal terminal = new KeyVendorTerminal(_bluetooth);
             return await terminal.ExecuteCommandAsync(updateUserInfoCommand, timeout, delay);

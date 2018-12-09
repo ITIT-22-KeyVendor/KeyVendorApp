@@ -1,6 +1,7 @@
 ﻿using KeyVendor.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -20,17 +21,32 @@ namespace KeyVendor.ViewModels
             GetKeyListAsync();
         }
 
-        public void OpenKeyManagementPage()
+        public async void OpenKeyManagementPage()
         {
-            OnOpenKeyManagementPage(this, new KeyManagementPageViewModel(_user, _bluetooth));
+            await Task.Run(async () =>
+            {
+                await Task.Delay(200);
+                Device.BeginInvokeOnMainThread(() =>
+                    OnOpenKeyManagementPage(this, new KeyManagementPageViewModel(_user, _bluetooth)));
+            });
         }
-        public void OpenUserManagementPage()
+        public async void OpenUserManagementPage()
         {
-            OnOpenUserManagementPage(this, new UserManagementPageViewModel(_user, _bluetooth));
+            await Task.Run(async () =>
+            {
+                await Task.Delay(200);
+                Device.BeginInvokeOnMainThread(() =>
+                    OnOpenUserManagementPage(this, new UserManagementPageViewModel(_user, _bluetooth)));
+            });
         }
-        public void OpenLogPage()
+        public async void OpenLogPage()
         {
-            OnOpenLogPage(this, new LogPageViewModel(_user, _bluetooth));
+            await Task.Run(async () =>
+            {
+                await Task.Delay(200);
+                Device.BeginInvokeOnMainThread(() =>
+                    OnOpenLogPage(this, new LogPageViewModel(_user, _bluetooth)));
+            });
         }
 
         public ObservableCollection<string> KeyList

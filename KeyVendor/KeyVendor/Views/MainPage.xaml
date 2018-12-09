@@ -89,7 +89,7 @@
                     Grid.Row="0"
                     VerticalOptions="Start"
                     FontAttributes="Bold"
-                    Text="Вітаємо у системі автоматизованої видачі ключів!"/>
+                    Text="Вітаємо у системі автоматизованого обліку ключів!"/>
                 <Label 
                     Grid.Row="1"
                     Margin="30"
