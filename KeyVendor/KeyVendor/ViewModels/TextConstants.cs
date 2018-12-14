@@ -3,7 +3,7 @@ namespace KeyVendor.ViewModels
 {
     public static class TextConstants
     {
-        public static string BluetoothUnavailable { get;  } = 
+        public static string BluetoothUnavailable { get; } =
             "На вашому пристрої Bluetooth не доступний! На жаль, ви не зможете користуватись цим застосунком :(";
         public static string BluetoothTurnOnFail { get; } =
             "Не вдалось увімкнути Bluetooth";
@@ -24,6 +24,12 @@ namespace KeyVendor.ViewModels
             "Іде процес отримання облікових даних...";
         public static string ActivityClearingLog { get; } =
             "Іде процес очищення облікових даних...";
+        public static string ActivityGettingUsers { get; } =
+            "Іде процес отримання списку користувачів...";
+        public static string ActivityGettingUserInfo { get; } =
+            "Іде процес отримання персональних даних користувача...";
+        public static string ActivityUserAction { get; } =
+            "Іде процес виконання операції над користувачем...";
 
         public static string ErrorTryAgain { get; } =
             "Сталась помилка, спробуйте ще раз";
@@ -41,6 +47,22 @@ namespace KeyVendor.ViewModels
             "Не вдалось отримати облікові дані";
         public static string ErrorClearLogFail { get; } =
             "Не вдалось очистити облікові дані";
+        public static string ErrorGetUserListFail { get; } =
+            "Не вдалось отримати список користувачів";
+        public static string ErrorGetInfoFail { get; } =
+            "Не вдалось отримати інформацію про користувача";
+        public static string ErrorUserConfirmFail { get; } =
+            "Не вдалось підтвердити заявку користувача";
+        public static string ErrorUserDenyFail { get; } =
+            "Не вдалось відхилити заявку користувача";
+        public static string ErrorUserBanFail { get; } =
+            "Не вдалось заблокувати користувача";
+        public static string ErrorUserUnbanFail { get; } =
+            "Не вдалось розблокувати користувача";
+        public static string ErrorUserPromoteFail { get; } =
+            "Не вдалось підвищити користувача до адміністратора";
+        public static string ErrorUserDemoteFail { get; } =
+            "Не вдалось забрати у користувача права адміністратора";
 
         public static string SuccessApplicationSent { get; } =
             "Заявку на реєстрацію надіслано. Після підтвердження адміністратором, Ви зможете увійти у цю систему";
@@ -55,6 +77,15 @@ namespace KeyVendor.ViewModels
             "Розпочати пошук";
         public static string ButtonStopRefreshing { get; } =
             "Зупинити пошук";
+
+        public static string ApplicationListTitle { get; } =
+            "Заявки";
+        public static string UserListTitle { get; } =
+            "Користувачі";
+        public static string AdminListTitle { get; } =
+            "Адміністратори";
+        public static string BanListTitle { get; } =
+            "Заблоковані";
 
         public static string DefaultDeviceName { get; } =
             "KeyVendor";

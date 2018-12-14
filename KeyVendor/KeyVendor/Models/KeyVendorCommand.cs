@@ -16,7 +16,7 @@ namespace KeyVendor.Models
         {
             string resultingCommand = "$";
             string uuid = UserUUID;
-            string dateTime = Time.ToString("yyyy/MM/dd,hh:mm:ss");
+            string dateTime = Time.ToString("yyyy/MM/dd,HH:mm:ss");
             string commandType = ((int)CommandType).ToString();
 
             resultingCommand += uuid + "@" + dateTime + "@" + commandType;

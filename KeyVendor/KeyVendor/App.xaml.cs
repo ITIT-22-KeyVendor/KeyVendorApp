@@ -71,6 +71,7 @@ namespace KeyVendor
         }
         private void OpenUserManagementPage(object sender, UserManagementPageViewModel viewModel)
         {
+            viewModel.OnOpenUserPage += OpenUserPage;
             var page = new UserManagementPage(viewModel);
             NavigationPage.SetHasBackButton(page, true);
             MainPage.Navigation.PushAsync(page);
@@ -78,6 +79,12 @@ namespace KeyVendor
         private void OpenLogPage(object sender, LogPageViewModel viewModel)
         {
             var page = new LogPage(viewModel);
+            NavigationPage.SetHasBackButton(page, true);
+            MainPage.Navigation.PushAsync(page);
+        }
+        private void OpenUserPage(object sender, UserPageViewModel viewModel)
+        {
+            var page = new UserPage(viewModel);
             NavigationPage.SetHasBackButton(page, true);
             MainPage.Navigation.PushAsync(page);
         }

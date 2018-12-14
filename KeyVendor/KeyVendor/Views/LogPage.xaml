@@ -116,12 +116,12 @@
                     Text="Назад"
                     WidthRequest="100"
                     Command="{Binding PreviousLogCommand}"
-                    HorizontalOptions="CenterAndExpand"/>
+                    HorizontalOptions="StartAndExpand"/>
                 <Button
                     Text="Вперед"
                     WidthRequest="100"
                     Command="{Binding NextLogCommand}"
-                    HorizontalOptions="CenterAndExpand"/>
+                    HorizontalOptions="EndAndExpand"/>
             </StackLayout>
         </Grid>
 

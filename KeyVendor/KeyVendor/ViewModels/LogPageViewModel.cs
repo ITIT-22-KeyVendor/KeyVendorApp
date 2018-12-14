@@ -114,13 +114,16 @@ namespace KeyVendor.ViewModels
 
                 for (int i = 0; i < dataArray.Length; i += 6)
                 {
+                    if (i + 5 >= dataArray.Length)
+                        break;
+
                     LogInfo logInfo = new LogInfo
                     {
                         UUID = dataArray[i],
                         Time = dataArray[i + 1],
                         Command = ((KeyVendorCommandType)(int.Parse(dataArray[i + 2]))).ToString(),
-                        Answer = ((KeyVendorAnswerType)(int.Parse(dataArray[i + 3]))).ToString(),
-                        Data = dataArray[i + 4],
+                        Data = dataArray[i + 3],
+                        Answer = ((KeyVendorAnswerType)(int.Parse(dataArray[i + 4]))).ToString(),
                         UserName = dataArray[i + 5]
                     };
 

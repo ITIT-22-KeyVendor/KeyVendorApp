@@ -11,6 +11,24 @@
                     Android="0"
                     WinPhone="0"/>
     </ContentPage.Padding>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Заявки"
+                     Order="Secondary"
+                     Command="{Binding GetApplicationListCommand}">
+        </ToolbarItem>
+        <ToolbarItem Text="Користувачі"
+                     Order="Secondary"
+                     Command="{Binding GetUserListCommand}">
+        </ToolbarItem>
+        <ToolbarItem Text="Адміністратори"
+                     Order="Secondary"
+                     Command="{Binding GetAdminListCommand}">
+        </ToolbarItem>
+        <ToolbarItem Text="Заблоковані"
+                     Order="Secondary"
+                     Command="{Binding GetBanListCommand}">
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
 
     <AbsoluteLayout>
         <Image AbsoluteLayout.LayoutBounds="0,0,1,1"
@@ -22,53 +40,93 @@
             AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
             AbsoluteLayout.LayoutFlags="All">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
+            <Label 
+                Text="{Binding Title}"
+                FontSize="Large"
+                HorizontalOptions="StartAndExpand"
+                HorizontalTextAlignment="Start"/>
             <ListView
-                Margin="0,10"
+                Margin="0,5,0,5"
                 ItemsSource="{Binding UserList}"
-                SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
-                SeparatorVisibility="None"
+                SelectedItem="{Binding SelectedUser}"
+                SeparatorVisibility="Default"
                 HasUnevenRows="True"
-                Grid.Row="0">
+                Grid.Row="1">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ContentView>
-                                <StackLayout Padding="15,10">
-                                    <Label Text="{Binding .}"
-                                           HorizontalTextAlignment="Center"
-                                           VerticalOptions="Center"
-                                           FontAttributes="Bold"/>
+                                <StackLayout Padding="10,10">
+                                    <!--<Label
+                                        Text="{Binding Name}"
+                                        HorizontalTextAlignment="Start"
+                                        VerticalOptions="Center"
+                                        FontSize="Small"
+                                        FontAttributes="Bold"/>-->
+                                    <Label Text="{Binding UUID}"
+                                           FontSize="Small"
+                                           HorizontalTextAlignment="Start"
+                                           VerticalOptions="Center"/>
                                 </StackLayout>
                             </ContentView>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <ActivityIndicator
+            <StackLayout
+                Padding="0,10,0,0"
+                Orientation="Horizontal"
+                Grid.Row="2">
+                <Button
+                    Text="Назад"
+                    WidthRequest="100"
+                    Command="{Binding PreviousUserListCommand}"
+                    HorizontalOptions="StartAndExpand"/>
+                <Button
+                    Text="Вперед"
+                    WidthRequest="100"
+                    Command="{Binding NextUserListCommand}"
+                    HorizontalOptions="EndAndExpand"/>
+            </StackLayout>
+            <Button
+                Grid.Row="3"
+                Text="Профіль"
+                Command="{Binding OpenUserPageCommand}"/>
+        </Grid>
+
+        <AbsoluteLayout
+            x:Name="activityIndicationOverlay"
+            AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="White"
+            Opacity="0.85"
+            IsVisible="{Binding IsActivityIndicationVisible}">
+            <Grid
+                AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+                AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Label
                     Grid.Row="0"
                     VerticalOptions="Center"
+                    FontSize="Large"
+                    Text="{Binding ActivityIndicationText}"/>
+                <ActivityIndicator
+                    Grid.Row="1"
+                    VerticalOptions="Center"
                     HorizontalOptions="Fill"
-                    IsRunning="{Binding IsActivityIndicationVisible}"
-                    IsVisible="{Binding IsActivityIndicationVisible}"/>
-            <Button
-                Text="{Binding}"
-                Command="{Binding }"
-                Grid.Row="1"/>
-            <Button
-                Text="{Binding}"
-                Command="{Binding }"
-                Grid.Row="2"/>
-            <Button
-                Text="{Binding}"
-                Command="{Binding }"
-                Grid.Row="3"/>
-        </Grid>
+                    IsRunning="{Binding IsActivityIndicationVisible}"/>
+            </Grid>
+        </AbsoluteLayout>
 
         <AbsoluteLayout
             x:Name="messageOverlay"
